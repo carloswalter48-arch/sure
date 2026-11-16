@@ -148,6 +148,18 @@ en:
         button_label: Continue
         description: Upload a CSV file with your merchants. We'll automatically map the columns for you.
         instructions: Select continue to parse your CSV and move on to the clean step.
+      mercado_pago_import:
+        intro: Dates, amounts and the running balance were read from the Mercado Pago export. Money in is positive. Apply the configuration to continue.
+        leave_empty: Leave empty
+        date: Date
+        date_format_label: Date format
+        amount: Amount
+        incomes_negative: Incomes are negative
+        incomes_positive: Incomes are positive
+        format: Number format
+        name_optional: Description (optional)
+        balance_optional: Balance column (saved in notes)
+        apply_configuration: Apply configuration
       mint_import:
         date_format_label: Date format
         account_optional: Account (optional)
@@ -259,6 +271,8 @@ en:
         monarch_transactions_label: Transactions export
         monarch_transactions_hint: Leave the transactions export out to import balance history only.
         monarch_upload_button: Upload exports
+        mercado_pago_invalid: Could not read a Mercado Pago statement. Use the Actividad CSV or XLSX, with date, description, amount and balance.
+        mercado_pago_account_required: Choose the account these movements belong to.
         csv_invalid: "Must be valid CSV with headers and at least one row of data"
         drop_csv_title: Drop CSV to upload
         drop_csv_subtitle: Your file will be uploaded automatically
@@ -270,6 +284,15 @@ en:
         paste_csv_placeholder: Paste your CSV file contents here
         download_sample_csv: Download a sample CSV
         to_see_format: to see the required CSV format
+        mercado_pago_title: Import Mercado Pago
+        mercado_pago_description: Upload the Actividad or account statement export. Argentine amounts (1.234,56) and dates (dd/mm/yyyy) are read automatically.
+        mercado_pago_export_title: Download it from Mercado Pago
+        mercado_pago_export_step_activity: Open Mercado Pago and go to Actividad (or the account statement).
+        mercado_pago_export_step_download: Download the CSV or Excel file.
+        mercado_pago_export_step_upload: Choose the file below and the account it belongs to.
+        mercado_pago_account_label: Account
+        mercado_pago_file_label: Actividad file
+        mercado_pago_upload_button: Upload statement
         qif_title: Upload QIF file
         qif_description: Select an account for single-account files, or leave blank when your QIF export includes account names.
         qif_account_label: Account
@@ -482,6 +505,7 @@ en:
       import_categories: Import categories
       import_merchants: Import merchants
       import_mint: Import from Mint
+      import_mercado_pago: Import from Mercado Pago
       import_actual: Import from Actual Budget
       import_portfolio: Import investments
       import_rules: Import rules

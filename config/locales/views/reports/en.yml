@@ -22,6 +22,7 @@ en:
       next_period: "Next period"
       shortcut_hint: "%{action} (%{key})"
       today: "Today"
+      real_terms_notice: "Income and expenses are in pesos of %{period} (INDEC CPI). Net worth is the current balance."
       period_label:
         quarterly: "Q%{quarter} %{year}"
         ytd: "YTD %{year}"

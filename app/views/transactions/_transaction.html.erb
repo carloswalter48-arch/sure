@@ -265,9 +265,14 @@
                   <%= icon "lock", size: "sm", class: "text-secondary" %>
                 <% end %>
               <% end %>
-              <%= content_tag :p,
-                  transaction.transfer? && view_ctx == "global" ? "+/- #{format_money(entry.amount_money.abs)}" : format_money(-entry.amount_money),
-                  class: ["privacy-sensitive shrink-0", "text-green-600": entry.amount.negative?] %>
+              <div class="text-right">
+                <%= content_tag :p,
+                    transaction.transfer? && view_ctx == "global" ? "+/- #{format_money(entry.amount_money.abs)}" : format_money(-entry.amount_money),
+                    class: ["privacy-sensitive shrink-0", "text-green-600": entry.amount.negative?] %>
+                <% if (real = real_terms_amount(entry)) %>
+                  <p class="text-xs text-secondary privacy-sensitive" title="<%= t("transactions.transaction.real_terms") %>"><%= format_money(real) %></p>
+                <% end %>
+              </div>
             </div>
           </div>
         </div>

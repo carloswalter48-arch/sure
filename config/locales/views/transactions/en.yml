@@ -182,6 +182,7 @@ en:
       transfer_confirmed: Transfer is confirmed
     transaction:
       pending: Pending
+      real_terms: In today's pesos
       pending_tooltip: Pending transaction — may change when posted
       linked_with_provider: Linked with %{provider}
       activity_type_tooltip: Investment activity type

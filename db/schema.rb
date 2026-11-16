@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_14_233000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -252,6 +252,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_233000) do
     t.datetime "updated_at", null: false
     t.index ["download_token_digest"], name: "index_archived_exports_on_download_token_digest", unique: true
     t.index ["expires_at"], name: "index_archived_exports_on_expires_at"
+  end
+
+  create_table "argentina_dollar_quotes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.decimal "buy_rate", null: false
+    t.datetime "created_at", null: false
+    t.string "kind", null: false
+    t.date "quoted_on", null: false
+    t.decimal "sell_rate", null: false
+    t.string "source", default: "dolarapi", null: false
+    t.datetime "updated_at", null: false
+    t.index ["kind", "quoted_on"], name: "index_argentina_dollar_quotes_on_kind_and_quoted_on", unique: true
+    t.check_constraint "buy_rate > 0::numeric AND sell_rate > 0::numeric", name: "chk_argentina_dollar_quotes_rates_positive"
+  end
+
+  create_table "argentina_price_indices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.decimal "index_value", null: false
+    t.date "period_on", null: false
+    t.string "source", default: "indec", null: false
+    t.datetime "updated_at", null: false
+    t.index ["period_on"], name: "index_argentina_price_indices_on_period_on", unique: true
+    t.check_constraint "index_value > 0::numeric", name: "chk_argentina_price_indices_positive"
   end
 
   create_table "balances", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -884,7 +906,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_233000) do
     t.string "timezone"
     t.datetime "updated_at", null: false
     t.string "vector_store_id"
+    t.string "argentina_fx_kind", default: "oficial", null: false
+    t.boolean "argentina_fx_enabled", default: false, null: false
+    t.boolean "inflation_adjustment_enabled", default: false, null: false
     t.index ["bills_feed_token"], name: "index_families_on_bills_feed_token", unique: true
+    t.check_constraint "argentina_fx_kind::text = ANY (ARRAY['oficial'::character varying, 'blue'::character varying, 'mep'::character varying]::text[])", name: "chk_families_argentina_fx_kind"
     t.check_constraint "categorization_confidence_threshold >= 0::numeric AND categorization_confidence_threshold <= 1::numeric", name: "chk_families_categorization_confidence_threshold"
     t.check_constraint "categorization_provider::text = ANY (ARRAY['llm'::character varying::text, 'jev'::character varying::text])", name: "chk_families_categorization_provider"
     t.check_constraint "categorization_shadow_rate >= 0::numeric AND categorization_shadow_rate <= 1::numeric", name: "chk_families_categorization_shadow_rate"

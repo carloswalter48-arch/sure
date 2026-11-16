@@ -38,6 +38,55 @@
     <% end %>
   </div>
 <% end %>
+<%= settings_section title: t(".argentina_title"), subtitle: t(".argentina_subtitle") do %>
+  <% snapshot = @user.family.argentina_snapshot %>
+  <div class="space-y-4">
+    <%= styled_form_with model: @user, class: "space-y-4", data: { controller: "auto-submit-form" } do |form| %>
+      <%= form.hidden_field :redirect_to, value: "preferences" %>
+      <%= form.fields_for :family do |family_form| %>
+        <%= family_form.select :argentina_fx_kind,
+            Argentina::Fx::KINDS.map { |kind| [t("argentina.fx_kinds.#{kind}"), kind] },
+            { label: t(".argentina_fx_kind"), hint: t(".argentina_fx_kind_hint") },
+            { data: { auto_submit_form_target: "auto" } } %>
+        <div class="flex items-center justify-between gap-4">
+          <div class="space-y-1">
+            <p class="text-sm" id="argentina_fx_enabled_label"><%= t(".argentina_fx_enabled") %></p>
+            <p class="text-secondary text-sm"><%= t(".argentina_fx_enabled_hint") %></p>
+          </div>
+          <%= family_form.toggle :argentina_fx_enabled,
+              "aria-labelledby": "argentina_fx_enabled_label",
+              data: { auto_submit_form_target: "auto" } %>
+        </div>
+        <div class="flex items-center justify-between gap-4">
+          <div class="space-y-1">
+            <p class="text-sm" id="inflation_adjustment_label"><%= t(".inflation_adjustment") %></p>
+            <p class="text-secondary text-sm"><%= t(".inflation_adjustment_hint") %></p>
+          </div>
+          <%= family_form.toggle :inflation_adjustment_enabled,
+              "aria-labelledby": "inflation_adjustment_label",
+              data: { auto_submit_form_target: "auto" } %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <div class="space-y-1 text-sm text-secondary">
+      <% if snapshot[:quote] %>
+        <p class="privacy-sensitive"><%= t(".argentina_quote", rate: number_with_precision(snapshot[:quote].sell_rate, precision: 2), kind: t("argentina.fx_kinds.#{@user.family.argentina_fx_kind}"), date: l(snapshot[:quote].quoted_on, format: :long)) %></p>
+      <% else %>
+        <p><%= t(".argentina_quote_missing") %></p>
+      <% end %>
+      <% if snapshot[:index] %>
+        <p><%= t(".argentina_cpi", period: l(snapshot[:index].period_on, format: :long), value: number_with_precision(snapshot[:index].index_value, precision: 2)) %></p>
+      <% else %>
+        <p><%= t(".argentina_cpi_missing") %></p>
+      <% end %>
+    </div>
+
+    <%= button_to t(".argentina_sync"), settings_argentina_sync_path, method: :post,
+          class: "font-medium inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm text-primary border border-secondary bg-transparent hover:bg-surface-hover" %>
+    <p class="text-xs text-secondary"><%= t(".argentina_sync_hint") %></p>
+  </div>
+<% end %>
 <% if Current.user.admin? && preview_features_enabled? %>
   <%= settings_section title: t(".transactions_title"), subtitle: t(".transactions_subtitle") do %>
     <div>

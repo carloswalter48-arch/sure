@@ -8,6 +8,20 @@ en:
         date_format: Date format
         general_subtitle: Configure your preferences
         general_title: General
+        argentina_title: Pesos and dollars
+        argentina_subtitle: Choose which Argentine dollar quote converts ARS and USD, and whether history is shown in today's pesos.
+        argentina_fx_kind: Rate used to convert
+        argentina_fx_kind_hint: Oficial is the central-bank rate. MEP (bolsa) and blue are market rates. Conversion uses the sell price, how many pesos one dollar costs.
+        argentina_fx_enabled: Use this rate for pesos and dollars
+        argentina_fx_enabled_hint: Replaces the stored USD/ARS rate with the quote you pick. Other currencies keep the usual provider. One rate per day is shared by the installation.
+        inflation_adjustment: Show history in today's pesos
+        inflation_adjustment_hint: Income, expenses and ARS transactions are scaled with the INDEC CPI (IPC) to the latest published month. Net worth stays the current balance. Only applies when the family currency is ARS.
+        argentina_sync: Update quotes and CPI
+        argentina_sync_hint: Fetches dolarapi.com, historical quotes from argentinadatos.com and the INDEC index from datos.gob.ar. Results are cached.
+        argentina_quote: "1 USD = %{rate} ARS (%{kind}) on %{date}"
+        argentina_quote_missing: No dollar quote stored yet. Update quotes to convert.
+        argentina_cpi: "Latest CPI month: %{period} (index %{value})"
+        argentina_cpi_missing: No CPI stored yet.
         transactions_title: Transactions
         transactions_subtitle: Configure how transactions behave
         manual_reconciliation: Manual reconciliation

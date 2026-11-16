@@ -1,0 +1,32 @@
+---
+es-AR:
+  import:
+    configurations:
+      mercado_pago_import:
+        intro: Leímos fecha, importe y saldo del export de Mercado Pago. La plata que entra es positiva. Aplicá la configuración para seguir.
+        leave_empty: Dejar vacío
+        date: Fecha
+        date_format_label: Formato de fecha
+        amount: Importe
+        incomes_negative: Los ingresos son negativos
+        incomes_positive: Los ingresos son positivos
+        format: Formato de número
+        name_optional: Descripción (opcional)
+        balance_optional: Columna de saldo (se guarda en las notas)
+        apply_configuration: Aplicar configuración
+    uploads:
+      show:
+        mercado_pago_invalid: No pudimos leer un resumen de Mercado Pago. Usá el CSV o XLSX de Actividad, con fecha, descripción, importe y saldo.
+        mercado_pago_account_required: Elegí la cuenta a la que pertenecen estos movimientos.
+        mercado_pago_title: Importar Mercado Pago
+        mercado_pago_description: Subí el export de Actividad o el resumen de cuenta. Los importes (1.234,56) y las fechas (dd/mm/aaaa) se leen solos.
+        mercado_pago_export_title: Descargalo desde Mercado Pago
+        mercado_pago_export_step_activity: Entrá a Mercado Pago y abrí Actividad (o el resumen de cuenta).
+        mercado_pago_export_step_download: Descargá el archivo CSV o Excel.
+        mercado_pago_export_step_upload: Elegí el archivo y la cuenta a la que corresponde.
+        mercado_pago_account_label: Cuenta
+        mercado_pago_file_label: Archivo de Actividad
+        mercado_pago_upload_button: Subir resumen
+  imports:
+    new:
+      import_mercado_pago: Importar desde Mercado Pago

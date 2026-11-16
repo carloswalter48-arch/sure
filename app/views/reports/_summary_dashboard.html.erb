@@ -14,6 +14,9 @@
       <p class="text-2xl font-semibold text-primary privacy-sensitive">
         <%= metrics[:current_income].format %>
       </p>
+      <% if (counterpart = argentina_counterpart_text(metrics[:current_income])) %>
+        <p class="text-sm text-secondary privacy-sensitive"><%= counterpart %></p>
+      <% end %>
 
       <% if metrics[:income_change] %>
         <div class="flex items-center gap-1.5 privacy-sensitive">
@@ -51,6 +54,9 @@
       <p class="text-2xl font-semibold text-primary privacy-sensitive">
         <%= metrics[:current_expenses].format %>
       </p>
+      <% if (counterpart = argentina_counterpart_text(metrics[:current_expenses])) %>
+        <p class="text-sm text-secondary privacy-sensitive"><%= counterpart %></p>
+      <% end %>
 
       <% if metrics[:expense_change] %>
         <div class="flex items-center gap-1.5 privacy-sensitive">
@@ -88,6 +94,9 @@
       <p class="text-2xl font-semibold privacy-sensitive <%= metrics[:net_savings] >= 0 ? "text-success" : "text-destructive" %>">
         <%= metrics[:net_savings].format %>
       </p>
+      <% if (counterpart = argentina_counterpart_text(metrics[:net_savings])) %>
+        <p class="text-sm text-secondary privacy-sensitive"><%= counterpart %></p>
+      <% end %>
 
       <p class="text-sm text-subdued">
         <%= t("reports.summary.income_minus_expenses") %>

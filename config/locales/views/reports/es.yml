@@ -19,6 +19,7 @@ es:
       previous_period: Periodo anterior
       next_period: Periodo siguiente
       today: Hoy
+      real_terms_notice: "Los ingresos y gastos están en pesos de %{period} (IPC del INDEC). El patrimonio es el saldo de hoy."
       period_label:
         quarterly: T%{quarter} %{year}
         ytd: Año en curso %{year}

@@ -30,7 +30,7 @@
     <% end %>
 
     <%
-      financial_tool_types = %w[MintImport ActualImport YnabImport MonarchImport QifImport SureImport DocumentImport PdfImport]
+      financial_tool_types = %w[MintImport ActualImport YnabImport MonarchImport QifImport SureImport MercadoPagoImport DocumentImport PdfImport]
       import_type = params[:type].presence || @pending_import&.type
       active_tab = import_type.present? && !import_type.in?(financial_tool_types) ? "raw_data" : "financial_tools"
     %>
@@ -90,6 +90,16 @@
 
                 <%= render "shared/ruler" %>
               </li>
+            <% end %>
+
+            <% if params[:type].nil? || params[:type] == "MercadoPagoImport" %>
+              <%= render "imports/import_option",
+                type: "MercadoPagoImport",
+                icon_name: "wallet",
+                icon_bg_class: "bg-info/10",
+                icon_text_class: "text-info",
+                label: t(".import_mercado_pago"),
+                enabled: true %>
             <% end %>
 
             <% if params[:type].nil? || params[:type] == "MintImport" || params[:type] == "TransactionImport" %>

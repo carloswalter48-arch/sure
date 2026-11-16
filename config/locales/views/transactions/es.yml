@@ -139,6 +139,7 @@ es:
       transfer_confirmed: La transferencia está confirmada
     transaction:
       pending: Pendiente
+      real_terms: En pesos de hoy
       pending_tooltip: Transacción pendiente — puede cambiar al confirmarse
       linked_with_provider: Vinculado con %{provider}
       activity_type_tooltip: Tipo de actividad de inversión

@@ -1,0 +1,5 @@
+---
+es-AR:
+  reports:
+    index:
+      real_terms_notice: "Los ingresos y gastos están en pesos de %{period} (IPC del INDEC). El patrimonio es el saldo de hoy."

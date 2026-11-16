@@ -245,6 +245,45 @@ class ReportsController < ApplicationController
       Money.new(value, Current.family.currency)
     end
 
+    # INDEC CPI, only for a family that asked for today's pesos and reports in ARS.
+    def inflation_adjustment_active?
+      return @inflation_adjustment_active if defined?(@inflation_adjustment_active)
+
+      @inflation_adjustment_active =
+        Current.family.inflation_adjustment_enabled? &&
+        Current.family.primary_currency_code == "ARS" &&
+        inflation_adjuster.available?
+    end
+
+    def inflation_adjuster
+      @inflation_adjuster ||= Argentina::Inflation.for_today
+    end
+
+    def inflation_ratio(date)
+      return nil unless inflation_adjustment_active?
+
+      inflation_adjuster.factor(on: date)
+    end
+
+    def inflation_adjusted_period_totals(period)
+      income = 0.to_d
+      expenses = 0.to_d
+      month = period.start_date.beginning_of_month
+
+      while month <= period.end_date
+        month_start = [ month, period.start_date ].max
+        month_end = [ month.end_of_month, period.end_date ].min
+        slice = Period.custom(start_date: month_start, end_date: month_end)
+        ratio = inflation_adjuster.factor(on: month_start) || 1
+        income += @income_statement.income_totals(period: slice).total.to_d * ratio
+        expenses += @income_statement.expense_totals(period: slice).total.to_d * ratio
+        month = month.next_month
+      end
+
+      currency = Current.family.currency
+      [ Money.new(income, currency), Money.new(expenses, currency) ]
+    end
+
     def parse_date_param(param_name)
       date_string = params[param_name]
       return nil if date_string.blank?
@@ -295,13 +334,18 @@ class ReportsController < ApplicationController
     end
 
     def build_summary_metrics
-      # Ensure we always have Money objects
-      current_income = ensure_money(@current_income_totals.total)
-      current_expenses = ensure_money(@current_expense_totals.total)
+      if inflation_adjustment_active?
+        # Each month is scaled by that month's CPI. One factor for the whole
+        # range would treat later pesos as if they were from the first month.
+        current_income, current_expenses = inflation_adjusted_period_totals(@period)
+        previous_income, previous_expenses = inflation_adjusted_period_totals(@previous_period)
+      else
+        current_income = ensure_money(@current_income_totals.total)
+        current_expenses = ensure_money(@current_expense_totals.total)
+        previous_income = ensure_money(@previous_income_totals.total)
+        previous_expenses = ensure_money(@previous_expense_totals.total)
+      end
       net_savings = current_income - current_expenses
-
-      previous_income = ensure_money(@previous_income_totals.total)
-      previous_expenses = ensure_money(@previous_expense_totals.total)
 
       # Calculate percentage changes
       income_change = calculate_percentage_change(previous_income, current_income)
@@ -367,6 +411,10 @@ class ReportsController < ApplicationController
 
         income = income_statement.income_totals(period: period).total
         expenses = income_statement.expense_totals(period: period).total
+        if (ratio = inflation_ratio(month_start))
+          income *= ratio
+          expenses *= ratio
+        end
 
         trends << {
           month: month_start.strftime("%b %Y"),
@@ -481,6 +529,10 @@ class ReportsController < ApplicationController
         type = entry.amount > 0 ? "expense" : "income"
         converted_amount = convert.call(entry)
         next if converted_amount.nil?
+
+        if (ratio = inflation_ratio(entry.date))
+          converted_amount *= ratio
+        end
 
         if category.nil?
           # Uncategorized or Other Investments (for trades)
