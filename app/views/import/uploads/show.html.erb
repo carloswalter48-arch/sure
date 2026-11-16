@@ -76,6 +76,30 @@
       <%= form.submit t(".monarch_upload_button"), disabled: @import.complete? %>
     <% end %>
   </div>
+<% elsif @import.is_a?(MercadoPagoImport) %>
+  <div class="space-y-4 mx-auto max-w-md">
+    <div class="text-center space-y-2">
+      <h1 class="text-3xl text-primary font-medium"><%= t(".mercado_pago_title") %></h1>
+      <p class="text-secondary text-sm"><%= t(".mercado_pago_description") %></p>
+    </div>
+
+    <%= render DS::Alert.new(variant: :info, title: t(".mercado_pago_export_title")) do %>
+      <ol class="list-decimal pl-4 space-y-1">
+        <li><%= t(".mercado_pago_export_step_activity") %></li>
+        <li><%= t(".mercado_pago_export_step_download") %></li>
+        <li><%= t(".mercado_pago_export_step_upload") %></li>
+      </ol>
+    <% end %>
+
+    <%= styled_form_with model: @import, scope: :import, url: import_upload_path(@import), multipart: true, class: "space-y-4" do |form| %>
+      <%= form.select :account_id,
+            Current.user.accessible_accounts.visible.alphabetically.pluck(:name, :id),
+            { label: t(".mercado_pago_account_label"), selected: @import.account_id },
+            required: true %>
+      <%= form.file_field :import_file, label: t(".mercado_pago_file_label"), accept: ".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", required: true %>
+      <%= form.submit t(".mercado_pago_upload_button"), disabled: @import.complete? %>
+    <% end %>
+  </div>
 <% elsif @import.is_a?(QifImport) %>
   <%# ── QIF upload – fixed format, account required ── %>
   <div class="space-y-4 mx-auto max-w-md">

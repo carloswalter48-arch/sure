@@ -14,6 +14,9 @@
           <% if classification_group.account_groups.any? %>
             <span class="text-secondary">&middot;</span>
             <span class="text-secondary font-medium text-lg privacy-sensitive"><%= classification_group.total_money.format(precision: 0) %></span>
+            <% if (counterpart = argentina_counterpart_text(classification_group.total_money)) %>
+              <span class="text-secondary text-sm font-normal privacy-sensitive"><%= counterpart %></span>
+            <% end %>
           <% end %>
         </h2>
       </div>

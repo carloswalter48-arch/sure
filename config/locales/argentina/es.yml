@@ -1,0 +1,12 @@
+---
+es:
+  argentina:
+    counterpart: "%{amount} (%{kind})"
+    fx_kinds:
+      oficial: oficial
+      blue: blue
+      mep: MEP
+  settings:
+    argentina:
+      sync:
+        queued: Estamos actualizando las cotizaciones y el IPC en segundo plano.

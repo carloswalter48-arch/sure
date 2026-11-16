@@ -14,6 +14,10 @@ class ExchangeRate::Importer
   end
 
   def import_provider_rates
+    if Argentina::Fx.handles_pair?(from, to)
+      return Argentina::Fx.materialize_exchange_rates(from: from, to: to, start_date: start_date, end_date: end_date)
+    end
+
     if !clear_cache && all_rates_exist?
       Rails.logger.info("No new rates to sync for #{from} to #{to} between #{start_date} and #{end_date}, skipping")
       backfill_inverse_rates_if_needed

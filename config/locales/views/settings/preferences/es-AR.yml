@@ -1,0 +1,19 @@
+---
+es-AR:
+  settings:
+    preferences:
+      show:
+        argentina_title: Pesos y dólares
+        argentina_subtitle: Elegí qué cotización del dólar convierte pesos y dólares, y si el historial se ve en pesos de hoy.
+        argentina_fx_kind: Cotización para convertir
+        argentina_fx_kind_hint: Oficial es la del Banco Central. El MEP (bolsa) y el blue son de mercado. La conversión usa el precio de venta, cuántos pesos vale un dólar.
+        argentina_fx_enabled: Usar esta cotización para pesos y dólares
+        argentina_fx_enabled_hint: Reemplaza el tipo de cambio USD/ARS guardado por la cotización que elijas. El resto de las monedas sigue con el proveedor habitual. Hay una sola cotización por día para toda la instalación.
+        inflation_adjustment: Ver el historial en pesos de hoy
+        inflation_adjustment_hint: Ingresos, gastos y movimientos en pesos se ajustan con el IPC del INDEC al último mes publicado. El patrimonio queda en el saldo de hoy. Solo aplica si la moneda de la familia es ARS.
+        argentina_sync: Actualizar cotizaciones e IPC
+        argentina_sync_hint: Trae dolarapi.com, el historial de argentinadatos.com y el índice del INDEC en datos.gob.ar. Los resultados quedan en caché.
+        argentina_quote: "1 USD = %{rate} ARS (%{kind}) al %{date}"
+        argentina_quote_missing: Todavía no hay una cotización guardada. Actualizá las cotizaciones para convertir.
+        argentina_cpi: "Último mes de IPC: %{period} (índice %{value})"
+        argentina_cpi_missing: Todavía no hay IPC guardado.

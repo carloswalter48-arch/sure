@@ -38,6 +38,11 @@ module ExchangeRate::Provided
                   .first
       return nearest if nearest.present?
 
+      # Argentine families can replace the USD/ARS series with oficial, MEP
+      # or blue. Stored quotes only; this does not call the network.
+      materialized = Argentina::Fx.materialize_date!(from: from, to: to, date: date)
+      return materialized if materialized
+
       return nil unless provider.present? # No provider configured (some self-hosted apps)
 
       response = provider.fetch_exchange_rate(from: from, to: to, date: date)

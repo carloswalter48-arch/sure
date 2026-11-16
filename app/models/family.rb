@@ -36,6 +36,7 @@ class Family < ApplicationRecord
 
 
   MONIKERS = [ "Family", "Group" ].freeze
+  ARGENTINA_FX_KINDS = Argentina::Fx::KINDS
   SHARING_DEFAULTS = %w[shared private].freeze
 
   has_many :users, dependent: :destroy
@@ -162,6 +163,9 @@ class Family < ApplicationRecord
   validates :investment_contributions_as_spending, inclusion: { in: [ true, false ] }
   validates :manual_reconciliation, inclusion: { in: [ true, false ] }
   validates :categories_locked, inclusion: { in: [ true, false ] }
+  validates :argentina_fx_kind, inclusion: { in: ARGENTINA_FX_KINDS }
+  validates :argentina_fx_enabled, inclusion: { in: [ true, false ] }
+  validates :inflation_adjustment_enabled, inclusion: { in: [ true, false ] }
   # The searchable timezone select submits "" while no zone is saved yet;
   # store nil so provider date parsing keeps its default instead of raising.
   # Rails' friendly names (e.g. "Pacific Time (US & Canada)") are stored as
@@ -176,10 +180,31 @@ class Family < ApplicationRecord
   before_validation :normalize_currency
   before_validation :normalize_enabled_currencies!
   after_create_commit :add_classifier_rules
+  after_commit :apply_argentina_fx_preference, if: :argentina_fx_preferences_changed?
 
   def primary_currency_code
     self.class.normalize_currency_code(currency) || "USD"
   end
+
+  def argentina_snapshot
+    Argentina::Fx.snapshot_for(self)
+  end
+
+  private
+    def argentina_fx_preferences_changed?
+      return false if previously_new_record?
+
+      saved_change_to_argentina_fx_enabled? || saved_change_to_argentina_fx_kind?
+    end
+
+    # Rewrite stored USD/ARS rows from quotes we already have, then refresh
+    # quotes in the background. Creating a family does not run this.
+    def apply_argentina_fx_preference
+      Argentina::Fx.materialize_all! if argentina_fx_enabled?
+      Argentina::SyncJob.perform_later
+    end
+
+  public
 
   def default_currency_for_country
     self.class.default_currency_for_country(country)

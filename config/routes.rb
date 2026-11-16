@@ -420,6 +420,7 @@ Rails.application.routes.draw do
   namespace :settings do
     resource :profile, only: [ :show, :destroy ]
     resource :preferences, only: %i[show update]
+    post "argentina/sync", to: "argentina#sync", as: :argentina_sync
     resource :budget_shares, only: :update
     resource :appearance, only: %i[show update]
     resource :debug, only: :show

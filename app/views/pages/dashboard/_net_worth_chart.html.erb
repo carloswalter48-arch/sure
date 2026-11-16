@@ -8,6 +8,9 @@
         <p class="text-primary -space-x-0.5 text-3xl font-medium privacy-sensitive <%= "animate-pulse" if balance_sheet.syncing? %>">
           <%= series.trend.current.format %>
         </p>
+        <% if (counterpart = argentina_counterpart_text(series.trend.current)) %>
+          <p class="text-sm text-secondary privacy-sensitive"><%= counterpart %></p>
+        <% end %>
         <%= render partial: "shared/trend_change", locals: { trend: series.trend, comparison_label: period.comparison_label } %>
       <% else %>
         <p class="text-sm text-secondary"><%= t(".data_not_available") %></p>

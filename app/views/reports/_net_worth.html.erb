@@ -7,6 +7,9 @@
       <p class="text-2xl font-semibold privacy-sensitive <%= net_worth_metrics[:current_net_worth] >= 0 ? "text-success" : "text-destructive" %>">
         <%= net_worth_metrics[:current_net_worth].format %>
       </p>
+      <% if (counterpart = argentina_counterpart_text(net_worth_metrics[:current_net_worth])) %>
+        <p class="text-sm text-secondary mt-1 privacy-sensitive"><%= counterpart %></p>
+      <% end %>
     </div>
 
     <%# Period Change %>

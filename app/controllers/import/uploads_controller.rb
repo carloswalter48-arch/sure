@@ -19,6 +19,8 @@ class Import::UploadsController < ApplicationController
   def update
     if @import.is_a?(QifImport)
       handle_qif_upload
+    elsif @import.is_a?(MercadoPagoImport)
+      handle_mercado_pago_upload
     elsif @import.is_a?(SureImport)
       update_sure_import_upload
     elsif @import.is_a?(MonarchImport)
@@ -96,6 +98,36 @@ class Import::UploadsController < ApplicationController
 
     def set_import
       @import = Current.family.imports.find(params[:import_id])
+    end
+
+    def handle_mercado_pago_upload
+      uploaded = upload_params[:import_file]
+      raw = uploaded&.read || upload_params[:raw_file_str]
+      if uploaded.present? && uploaded.size > Import::MAX_CSV_SIZE
+        flash.now[:alert] = t("imports.create.file_too_large", max_size: Import::MAX_CSV_SIZE / 1.megabyte)
+        render :show, status: :unprocessable_entity
+        return
+      end
+
+      parsed = Argentina::MercadoPago::Statement.parse(raw, filename: uploaded&.original_filename)
+      if parsed.rows.empty?
+        flash.now[:alert] = t("import.uploads.show.mercado_pago_invalid")
+        render :show, status: :unprocessable_entity
+        return
+      end
+
+      unless import_account_id.present?
+        flash.now[:alert] = t("import.uploads.show.mercado_pago_account_required")
+        render :show, status: :unprocessable_entity
+        return
+      end
+
+      @import.account = accessible_accounts.find(import_account_id)
+      @import.raw_file_str = parsed.csv
+      @import.assign_attributes(MercadoPagoImport.default_column_mappings)
+      @import.save!(validate: false)
+
+      redirect_to import_configuration_path(@import), notice: t("imports.create.csv_uploaded")
     end
 
     def handle_qif_upload

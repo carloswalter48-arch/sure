@@ -130,6 +130,13 @@
 <div class="w-full space-y-6 lg:pb-6">
   <%= render "shared/exchange_rate_notes", family: Current.family %>
 
+  <% if Current.family.inflation_adjustment_enabled? && Current.family.primary_currency_code == "ARS" %>
+    <% indexed_on = Argentina::Inflation.for_today.latest_period %>
+    <% if indexed_on %>
+      <%= render DS::Alert.new(variant: :info, message: t("reports.index.real_terms_notice", period: l(indexed_on, format: :long))) %>
+    <% end %>
+  <% end %>
+
   <% if Current.family.transactions.any? %>
     <%# Summary Dashboard - Always visible, not collapsible %>
     <section>

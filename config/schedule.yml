@@ -109,6 +109,13 @@ refresh_maintained_goal_targets:
   queue: "scheduled"
   description: "Recomputes the floor of reserves expressed in months of expenses"
 
+sync_argentina_markets:
+  cron: "15 11 * * *" # 08:15 in Buenos Aires (UTC-3)
+  class: "Argentina::SyncJob"
+  active_job: true
+  queue: "scheduled"
+  description: "Fetches Argentine dollar quotes and the INDEC CPI, then refreshes the ARS/USD rate when a family uses it"
+
 backfill_account_logos:
   cron: "30 3 * * *" # 3:30 AM every day
   class: "AccountLogoBackfillJob"

@@ -1,0 +1,12 @@
+---
+en:
+  argentina:
+    counterpart: "%{amount} (%{kind})"
+    fx_kinds:
+      oficial: official
+      blue: blue
+      mep: MEP
+  settings:
+    argentina:
+      sync:
+        queued: Updating Argentine quotes and CPI in the background.
